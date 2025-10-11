@@ -3,6 +3,15 @@
 
 # [English Version](README_EN.MD)
 
+## 📚 完整文档
+
+- **[快速入门指南](docs/QUICKSTART.md)** - 5分钟快速上手
+- **[API 文档](docs/API.md)** - 完整的API参考和示例
+- **[组件文档](docs/COMPONENTS.md)** - 详细的组件说明
+- **[架构概览](docs/ARCHITECTURE.md)** - 系统设计和架构
+- **[部署指南](docs/DEPLOYMENT.md)** - 部署和配置说明
+- **[文档索引](docs/README.md)** - 所有文档的导航
+
 ### 作者：技术爬爬虾
 B站，YouTube，抖音，公众号 全网同名。转载请注明作者。
 
