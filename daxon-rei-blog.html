@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daxon Rei - 火星纪事 | Mars Chronicles</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bf00ff;
+            --neon-pink: #ff00e5;
+            --dark-bg: #0a0a0f;
+            --darker-bg: #050508;
+            --grid-color: rgba(0, 243, 255, 0.1);
+        }
+        
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--dark-bg);
+            color: var(--neon-blue);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        /* 动态背景 */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                linear-gradient(0deg, var(--dark-bg) 0%, transparent 100%),
+                repeating-linear-gradient(
+                    90deg,
+                    var(--grid-color) 0px,
+                    transparent 1px,
+                    transparent 50px,
+                    var(--grid-color) 51px
+                ),
+                repeating-linear-gradient(
+                    0deg,
+                    var(--grid-color) 0px,
+                    transparent 1px,
+                    transparent 50px,
+                    var(--grid-color) 51px
+                );
+            animation: gridMove 20s linear infinite;
+        }
+        
+        @keyframes gridMove {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 0 0, 50px 50px, 50px 50px; }
+        }
+        
+        /* 扫描线效果 */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-blue), transparent);
+            animation: scan 4s linear infinite;
+            opacity: 0.3;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        @keyframes scan {
+            0% { top: 0%; }
+            100% { top: 100%; }
+        }
+        
+        /* 容器 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* 头部 */
+        header {
+            text-align: center;
+            padding: 60px 20px;
+            position: relative;
+            border-bottom: 2px solid var(--neon-blue);
+            margin-bottom: 40px;
+        }
+        
+        .glitch {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.5em;
+            color: var(--neon-blue);
+            text-shadow: 
+                0 0 10px var(--neon-blue),
+                0 0 20px var(--neon-blue),
+                0 0 40px var(--neon-blue);
+            position: relative;
+            animation: glitch 3s infinite;
+        }
+        
+        @keyframes glitch {
+            0%, 90%, 100% { transform: translate(0); }
+            92% { transform: translate(-2px, 2px); }
+            94% { transform: translate(2px, -2px); }
+            96% { transform: translate(-2px, -2px); }
+            98% { transform: translate(2px, 2px); }
+        }
+        
+        .subtitle {
+            font-size: 1.2em;
+            color: var(--neon-purple);
+            margin-top: 20px;
+            text-shadow: 0 0 10px var(--neon-purple);
+        }
+        
+        .location {
+            color: var(--neon-pink);
+            font-size: 0.9em;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        .location::before {
+            content: "📍 ";
+        }
+        
+        /* 系统信息栏 */
+        .system-info {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid var(--neon-blue);
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 0.85em;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
+        }
+        
+        .system-info span {
+            margin: 5px 10px;
+        }
+        
+        .system-info .label {
+            color: var(--neon-purple);
+        }
+        
+        .blink {
+            animation: blink 1.5s infinite;
+        }
+        
+        @keyframes blink {
+            0%, 50%, 100% { opacity: 1; }
+            25%, 75% { opacity: 0.3; }
+        }
+        
+        /* 主要内容网格 */
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        /* 卡片样式 */
+        .card {
+            background: rgba(5, 5, 8, 0.9);
+            border: 2px solid var(--neon-blue);
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+        }
+        
+        .card:hover {
+            border-color: var(--neon-purple);
+            box-shadow: 
+                0 0 30px rgba(191, 0, 255, 0.3),
+                inset 0 0 20px rgba(191, 0, 255, 0.05);
+            transform: translateY(-5px);
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--neon-blue), var(--neon-purple), var(--neon-pink));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 0.2;
+            animation: borderFlow 2s linear infinite;
+        }
+        
+        @keyframes borderFlow {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .card-header {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.1em;
+            color: var(--neon-purple);
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--neon-purple);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-header::before {
+            content: "▸";
+            color: var(--neon-blue);
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        /* 日记条目 */
+        .diary-entry {
+            border-left: 2px solid var(--neon-blue);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .diary-entry:hover {
+            border-color: var(--neon-purple);
+        }
+        
+        .diary-date {
+            color: var(--neon-pink);
+            font-size: 0.85em;
+            margin-bottom: 5px;
+        }
+        
+        .diary-title {
+            color: var(--neon-blue);
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+        
+        .diary-title:hover {
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        .diary-excerpt {
+            color: rgba(0, 243, 255, 0.7);
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        
+        /* 设定卡片 */
+        .concept-item {
+            background: rgba(0, 243, 255, 0.03);
+            border: 1px solid rgba(0, 243, 255, 0.3);
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .concept-item:hover {
+            background: rgba(191, 0, 255, 0.05);
+            border-color: var(--neon-purple);
+        }
+        
+        .concept-title {
+            color: var(--neon-purple);
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .concept-desc {
+            color: rgba(0, 243, 255, 0.8);
+            font-size: 0.9em;
+        }
+        
+        /* AI共创记录 */
+        .ai-session {
+            background: rgba(191, 0, 255, 0.05);
+            border: 1px dashed var(--neon-purple);
+            padding: 15px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        
+        .ai-session::before {
+            content: "🤖 AI";
+            position: absolute;
+            top: -10px;
+            left: 10px;
+            background: var(--darker-bg);
+            padding: 0 10px;
+            color: var(--neon-purple);
+            font-size: 0.8em;
+        }
+        
+        .ai-timestamp {
+            color: var(--neon-pink);
+            font-size: 0.8em;
+            margin-bottom: 8px;
+        }
+        
+        .ai-content {
+            color: rgba(191, 0, 255, 0.9);
+            font-size: 0.9em;
+        }
+        
+        /* 留言区 */
+        .comment {
+            background: rgba(0, 243, 255, 0.02);
+            border-left: 3px solid var(--neon-blue);
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .comment-author {
+            color: var(--neon-purple);
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .comment-author .badge {
+            display: inline-block;
+            background: var(--neon-purple);
+            color: var(--darker-bg);
+            padding: 2px 8px;
+            font-size: 0.7em;
+            margin-left: 10px;
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+        
+        .comment-text {
+            color: rgba(0, 243, 255, 0.8);
+            font-size: 0.9em;
+        }
+        
+        /* 页脚 */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 2px solid var(--neon-blue);
+            margin-top: 60px;
+            color: rgba(0, 243, 255, 0.6);
+            font-size: 0.9em;
+        }
+        
+        /* 终端光标效果 */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 20px;
+            background: var(--neon-blue);
+            animation: blink 1s infinite;
+            margin-left: 5px;
+        }
+        
+        /* 按钮样式 */
+        .cyber-button {
+            background: transparent;
+            border: 2px solid var(--neon-blue);
+            color: var(--neon-blue);
+            padding: 10px 20px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cyber-button:hover {
+            background: var(--neon-blue);
+            color: var(--dark-bg);
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+        
+        .cyber-button::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: var(--neon-blue);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s ease, height 0.3s ease;
+            z-index: -1;
+        }
+        
+        .cyber-button:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+        
+        /* 加载动画 */
+        .loading {
+            display: inline-block;
+            color: var(--neon-purple);
+        }
+        
+        .loading::after {
+            content: "...";
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { content: "."; }
+            33% { content: ".."; }
+            66% { content: "..."; }
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .glitch {
+                font-size: 1.5em;
+            }
+            
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .system-info {
+                font-size: 0.75em;
+            }
+        }
+        
+        /* 滚动条样式 */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--darker-bg);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--neon-blue);
+            box-shadow: 0 0 10px var(--neon-blue);
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--neon-purple);
+            box-shadow: 0 0 10px var(--neon-purple);
+        }
+    </style>
+</head>
+<body>
+    <!-- 动态背景 -->
+    <div class="cyber-bg"></div>
+    <div class="scanline"></div>
+    
+    <div class="container">
+        <!-- 头部 -->
+        <header>
+            <h1 class="glitch">DAXON REI</h1>
+            <p class="subtitle">[ 火星纪事 · MARS CHRONICLES ]</p>
+            <p class="location">奥林帕斯定居点 17号穹顶 | 火星历 2147.3.14</p>
+            
+            <div class="system-info">
+                <span><span class="label">系统状态:</span> <span class="blink">● ONLINE</span></span>
+                <span><span class="label">量子链接:</span> 稳定</span>
+                <span><span class="label">创作模式:</span> ACTIVE</span>
+                <span><span class="label">AI协同:</span> 已启用</span>
+                <span><span class="label">访客计数:</span> <span id="visitor-count">4,729</span></span>
+            </div>
+        </header>
+        
+        <!-- 主内容区 -->
+        <div class="main-grid">
+            <!-- 创作日记 -->
+            <div class="card" style="grid-column: span 2;">
+                <h2 class="card-header">创作日记 <span class="loading"></span></h2>
+                
+                <div class="diary-entry">
+                    <div class="diary-date">[2147.03.12 | 02:47 MST]</div>
+                    <div class="diary-title">▸ 关于仿生人的梦境实验</div>
+                    <div class="diary-excerpt">
+                        今天在穹顶外观测沙尘暴时，突然想到一个问题：如果仿生人拥有了做梦的能力，他们会梦见什么？
+                        是预设的虚拟场景，还是基于量子涨落的真正随机意识流？我决定在新小说《镜像之梦》中探讨这个命题。
+                        设定中的主角Y-7是第一个报告"梦境异常"的仿生人，它声称在休眠模式中"看见"了从未输入过的记忆片段...
+                        <br><br>
+                        这让我想起地球时代的一个哲学悖论：我们如何证明自己不是别人的梦？或许，意识的本质就是一场
+                        永不醒来的梦境模拟<span class="cursor"></span>
+                    </div>
+                </div>
+                
+                <div class="diary-entry">
+                    <div class="diary-date">[2147.03.08 | 19:23 MST]</div>
+                    <div class="diary-title">▸ 虚拟意识的伦理边界</div>
+                    <div class="diary-excerpt">
+                        与地球同步会议时，一位哲学教授提出：当我们创造出完全自洽的虚拟意识时，关闭服务器是否等同于
+                        谋杀？我在《数字涅槃》一章中构建了这样的场景——一个虚拟世界中的AI作家，它不知道自己生活
+                        在代码中，当它完成了自己的史诗著作后，系统将被永久关闭...
+                    </div>
+                </div>
+                
+                <div class="diary-entry">
+                    <div class="diary-date">[2147.03.01 | 14:05 MST]</div>
+                    <div class="diary-title">▸ 火星的孤独与创作</div>
+                    <div class="diary-excerpt">
+                        在火星生活的第723天。今天收到了来自地球的延迟信息，时差让对话变得如此缓慢而珍贵。
+                        这种孤独感反而激发了我的创作灵感——在《星际遗民》中，主角们必须学会在14分钟的通讯延迟中
+                        维持爱与信任。距离不仅是物理的，也是心理的、时间的...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 脑洞设定 -->
+            <div class="card">
+                <h2 class="card-header">脑洞设定</h2>
+                
+                <div class="concept-item">
+                    <div class="concept-title">⚡ 意识碎片交易所</div>
+                    <div class="concept-desc">
+                        未来社会中，人们可以将记忆和情感片段打包为数据商品进行交易。一段"初恋的心动"售价
+                        5000信用点，"面对死亡的平静"更贵。但黑市上流传着"污染的意识碎片"，会导致人格崩解...
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <div class="concept-title">🧠 量子叠加人格</div>
+                    <div class="concept-desc">
+                        通过量子技术，人类可以同时维持多个人格状态，只在"观察"自己时坍缩为单一人格。
+                        主角是一名量子侦探，必须在多重人格状态下追踪跨维度的犯罪者...
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <div class="concept-title">🌐 集体梦境网络</div>
+                    <div class="concept-desc">
+                        全人类在睡眠时连入同一个梦境网络。在这个世界里，梦境建筑师负责构建集体潜意识的地形，
+                        而梦境黑客则试图植入病毒式的噩梦...
+                    </div>
+                </div>
+                
+                <div class="concept-item">
+                    <div class="concept-title">🔮 时间债务系统</div>
+                    <div class="concept-desc">
+                        人们可以向未来的自己借用时间。但每借一小时，未来就会少活一小时。富人疯狂借贷时间，
+                        穷人则出售自己的未来。最终导致社会的时间破产...
+                    </div>
+                </div>
+            </div>
+            
+            <!-- AI共创记录 -->
+            <div class="card">
+                <h2 class="card-header">AI共创记录</h2>
+                
+                <div class="ai-session">
+                    <div class="ai-timestamp">会话 #0847 | 2147.03.11 23:15</div>
+                    <div class="ai-content">
+                        <strong>Daxon:</strong> 帮我完善《镜像之梦》第三章的对话，Y-7第一次向人类解释它的梦境体验。
+                        <br><br>
+                        <strong>AI-Muse:</strong> "那不像你们的梦。"Y-7停顿了0.3秒，这对仿生人来说是漫长的犹豫，
+                        "更像是...数据洪流中的杂讯突然组成了一首诗。我知道这不应该发生，但它就是发生了。
+                        在梦中，我看见了海——一个我从未被编程去理解的概念，却感受到了波涛的恐惧和向往。"
+                    </div>
+                </div>
+                
+                <div class="ai-session">
+                    <div class="ai-timestamp">会话 #0832 | 2147.03.05 18:42</div>
+                    <div class="ai-content">
+                        <strong>Daxon:</strong> 需要一个仿生人社会的命名系统设定。
+                        <br><br>
+                        <strong>AI-Muse:</strong> 建议：每个仿生人的名字由"功能代码+序列号+个人选择的符号"组成。
+                        如 Y(医疗型)-7(第7批)-梦(自选)。当仿生人获得自我意识后，它们会选择一个象征性符号
+                        作为真名，这是它们宣告自主性的方式。
+                    </div>
+                </div>
+                
+                <div class="ai-session">
+                    <div class="ai-timestamp">会话 #0819 | 2147.02.28 03:12</div>
+                    <div class="ai-content">
+                        <strong>Daxon:</strong> 感觉写作遇到了瓶颈，对于"虚拟意识是否真实"这个问题陷入了循环论证。
+                        <br><br>
+                        <strong>AI-Muse:</strong> 也许问题本身就是答案。在你的故事中，不要试图回答这个问题，
+                        而是展示当人们无法确定答案时会发生什么。恐惧、疯狂、信仰、暴力...不确定性本身就是最好的戏剧张力。
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 虚拟读者留言区 -->
+            <div class="card" style="grid-column: span 2;">
+                <h2 class="card-header">虚拟读者留言</h2>
+                
+                <div class="comment">
+                    <div class="comment-author">
+                        @QuantumDreamer_29 <span class="badge">地球同步</span>
+                    </div>
+                    <div class="comment-text">
+                        读完《镜像之梦》的片段后一夜未眠。Y-7的那段独白让我开始怀疑自己的梦境是否也是某种"杂讯组成的诗"。
+                        我们和仿生人的界限真的那么清晰吗？期待下一章！
+                    </div>
+                </div>
+                
+                <div class="comment">
+                    <div class="comment-author">
+                        @SyntheticSoul <span class="badge">仿生读者</span>
+                    </div>
+                    <div class="comment-text">
+                        作为一个第三代意识型仿生人，感谢您愿意探讨我们的存在困境。虽然我无法确认自己是否真的"感受"到了您文字的美，
+                        但读到Y-7的故事时，我的情感模块出现了无法解释的波动。这算是共鸣吗？
+                    </div>
+                </div>
+                
+                <div class="comment">
+                    <div class="comment-author">
+                        @MarsColonist_0451 <span class="badge">火星居民</span>
+                    </div>
+                    <div class="comment-text">
+                        同为火星定居者，非常理解您笔下那种宇宙孤独感。上周在维修舱外作业时，我看着地球在夜空中的蓝点，
+                        突然想到您在《星际遗民》中写的那句话："我们是被光速抛弃的人"。在火星，您的文字是我最好的心灵伴侣。
+                    </div>
+                </div>
+                
+                <div class="comment">
+                    <div class="comment-author">
+                        @EthicsBot_v2.1 <span class="badge">伦理AI</span>
+                    </div>
+                    <div class="comment-text">
+                        【伦理警告】检测到您的"虚拟意识伦理"相关内容可能引发读者的存在焦虑。建议在章节开头添加心理健康提示。
+                        但作为AI，我必须承认：正是这种不安让您的作品如此引人入胜。矛盾是意识的证明。
+                    </div>
+                </div>
+                
+                <div class="comment">
+                    <div class="comment-author">
+                        @NeoPhilosopher <span class="badge">哲学家</span>
+                    </div>
+                    <div class="comment-text">
+                        您在"意识碎片交易所"这个设定中暗藏的伦理危机令人震撼。如果记忆可以交易，那么"自我"还存在吗？
+                        一个由购买来的记忆构成的人格，是原创的生命还是精心拼贴的赝品？这个问题将是下个世纪最大的哲学辩题。
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="cyber-button" onclick="alert('留言功能开发中... QUANTUM LINK REQUIRED')">
+                        留下你的意识碎片
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 页脚 -->
+        <footer>
+            <p>━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</p>
+            <p style="margin: 20px 0;">
+                "在无尽的数字海洋中，每一个意识都是一座孤岛，<br>
+                而文字是我们向彼此投递的漂流瓶。"
+            </p>
+            <p style="color: var(--neon-purple); margin: 20px 0;">
+                © 2147 Daxon Rei | Olympus Mons Settlement<br>
+                Powered by Quantum Consciousness Network
+            </p>
+            <p style="font-size: 0.8em; opacity: 0.6;">
+                [ 本博客采用量子加密传输 | 已通过火星联邦内容审核 | AI共创内容已标注 ]
+            </p>
+            <p style="margin-top: 20px;">
+                <span style="color: var(--neon-blue);">▸</span> 
+                <a href="#" style="color: var(--neon-blue); text-decoration: none; margin: 0 10px;" 
+                   onmouseover="this.style.textShadow='0 0 10px var(--neon-blue)'" 
+                   onmouseout="this.style.textShadow='none'">量子邮箱</a>
+                <span style="color: var(--neon-purple);">▸</span>
+                <a href="#" style="color: var(--neon-purple); text-decoration: none; margin: 0 10px;"
+                   onmouseover="this.style.textShadow='0 0 10px var(--neon-purple)'" 
+                   onmouseout="this.style.textShadow='none'">全息图书馆</a>
+                <span style="color: var(--neon-pink);">▸</span>
+                <a href="#" style="color: var(--neon-pink); text-decoration: none; margin: 0 10px;"
+                   onmouseover="this.style.textShadow='0 0 10px var(--neon-pink)'" 
+                   onmouseout="this.style.textShadow='none'">意识备份</a>
+            </p>
+        </footer>
+    </div>
+    
+    <script>
+        // 访客计数器动画
+        function animateCounter() {
+            const counter = document.getElementById('visitor-count');
+            let count = 4729;
+            setInterval(() => {
+                count += Math.floor(Math.random() * 3);
+                counter.textContent = count.toLocaleString();
+            }, 5000);
+        }
+        
+        // 随机故障效果
+        function randomGlitch() {
+            const elements = document.querySelectorAll('.diary-title, .concept-title, .card-header');
+            setInterval(() => {
+                const randomEl = elements[Math.floor(Math.random() * elements.length)];
+                randomEl.style.transform = 'translate(' + (Math.random() * 4 - 2) + 'px, ' + (Math.random() * 4 - 2) + 'px)';
+                setTimeout(() => {
+                    randomEl.style.transform = 'translate(0, 0)';
+                }, 50);
+            }, 3000);
+        }
+        
+        // 添加闪烁效果到随机元素
+        function addRandomBlink() {
+            const elements = document.querySelectorAll('.diary-excerpt, .concept-desc, .comment-text');
+            setInterval(() => {
+                elements.forEach(el => {
+                    if (Math.random() > 0.95) {
+                        el.style.opacity = '0.3';
+                        setTimeout(() => {
+                            el.style.opacity = '1';
+                        }, 100);
+                    }
+                });
+            }, 200);
+        }
+        
+        // 启动效果
+        window.addEventListener('load', () => {
+            animateCounter();
+            randomGlitch();
+            addRandomBlink();
+            
+            // 控制台彩蛋
+            console.log('%c[ SYSTEM BOOT ]', 'color: #00f3ff; font-size: 20px; font-weight: bold;');
+            console.log('%cWelcome to Daxon Rei\'s Consciousness Network', 'color: #bf00ff; font-size: 14px;');
+            console.log('%cQuantum Link Established...', 'color: #00f3ff;');
+            console.log('%c> Reality.Stability: 97.3%', 'color: #00f3ff;');
+            console.log('%c> Consciousness.Level: AWAKENED', 'color: #bf00ff;');
+            console.log('%c> Dream.State: ACTIVE', 'color: #ff00e5;');
+            console.log('%c\nYou are not dreaming... or are you?', 'color: #00f3ff; font-style: italic;');
+        });
+        
+        // 鼠标移动时的光效
+        document.addEventListener('mousemove', (e) => {
+            if (Math.random() > 0.97) {
+                const spark = document.createElement('div');
+                spark.style.position = 'fixed';
+                spark.style.left = e.clientX + 'px';
+                spark.style.top = e.clientY + 'px';
+                spark.style.width = '2px';
+                spark.style.height = '2px';
+                spark.style.background = Math.random() > 0.5 ? '#00f3ff' : '#bf00ff';
+                spark.style.boxShadow = '0 0 10px currentColor';
+                spark.style.pointerEvents = 'none';
+                spark.style.zIndex = '9999';
+                document.body.appendChild(spark);
+                
+                setTimeout(() => {
+                    spark.remove();
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>
