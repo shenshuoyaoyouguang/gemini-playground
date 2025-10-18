@@ -23,25 +23,24 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     min-height: 100vh;
-    background-color: #f0f0f0;
+    background-color: var(--background-color);
 }
 
 #app {
-    background-color: #fff;
-    border-radius: 8px;
+    background-color: var(--surface-color);
+    border-radius: var(--border-radius);
     padding: 20px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px var(--shadow-color);
     width: 80%;
     max-width: 1000px;
 }
 
 #logs-container {
-    border: 1px solid #ccc;
     height: 300px;
     overflow-y: auto;
     margin-bottom: 10px;
     padding: 10px;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(0, 0, 0, 0.1);
@@ -82,33 +81,34 @@ body {
 #message-input {
     width: calc(100% - 100px);
     padding: 10px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     margin-right: 10px;
 }
 
-#send-button, #mic-button {
+/* Base button styles for action buttons */
+.action-btn {
     padding: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #4285f4;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--surface-color);
     cursor: pointer;
     transition: all 0.2s ease;
     position: relative;
     overflow: hidden;
 }
 
-#send-button:hover, #mic-button:hover {
+.action-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-#send-button:active, #mic-button:active {
+.action-btn:active {
     transform: translateY(1px);
 }
 
-#send-button::after, #mic-button::after {
+.action-btn::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -121,9 +121,13 @@ body {
     transition: width 0.3s ease, height 0.3s ease;
 }
 
-#send-button:active::after, #mic-button:active::after {
+.action-btn:active::after {
     width: 200px;
     height: 200px;
+}
+
+#send-button, #mic-button {
+    /* Inherits .action-btn styles */
 }
 
 #audio-visualizer {
@@ -137,7 +141,7 @@ body {
 
 .audio-bar {
     height: 100%;
-    background-color: #4285f4;
+    background-color: var(--primary-color);
     width: 0%;
 }
 
@@ -163,14 +167,15 @@ body {
     margin-bottom: 10px;
     border: none;
     border-radius: 4px;
-    background-color: #34a853;
-    color: #fff;
+    background-color: var(--secondary-color);
+    color: var(--surface-color);
     cursor: pointer;
     font-weight: bold;
+    transition: background-color 0.3s ease;
 }
 
 #connect-button.connected {
-    background-color: #ea4335;
+    background-color: var(--danger-color);
 }
 
 #video-container {
@@ -183,7 +188,7 @@ body {
 
 #video-container video {
     width: 100%;
-    border-radius: 8px;
+    border-radius: var(--border-radius);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
@@ -195,8 +200,8 @@ body {
 }
 
 #stop-video {
-    background: #ea4335;
-    color: white;
+    background: var(--danger-color);
+    color: var(--surface-color);
     border: none;
     padding: 8px 16px;
     border-radius: 4px;
@@ -217,47 +222,13 @@ body {
 }
 
 #camera-button {
-    background: #4285f4;
-    color: white;
-    border: none;
     padding: 8px;
     border-radius: 50%;
-    cursor: pointer;
     margin-left: 8px;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-#camera-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#camera-button:active {
-    transform: translateY(1px);
-}
-
-#camera-button::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s ease, height 0.3s ease;
-}
-
-#camera-button:active::after {
-    width: 200px;
-    height: 200px;
 }
 
 #camera-button.active {
-    background: #ea4335;
+    background: var(--danger-color);
 }
 
 #frame-preview {
@@ -312,47 +283,13 @@ body {
 }
 
 #screen-button {
-    background: #4285f4;
-    color: white;
-    border: none;
     padding: 8px;
     border-radius: 50%;
-    cursor: pointer;
     margin-left: 8px;
-    transition: all 0.2s ease;
-    position: relative;
-    overflow: hidden;
-}
-
-#screen-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-#screen-button:active {
-    transform: translateY(1px);
-}
-
-#screen-button::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 0;
-    height: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border-radius: 50%;
-    transform: translate(-50%, -50%);
-    transition: width 0.3s ease, height 0.3s ease;
-}
-
-#screen-button:active::after {
-    width: 200px;
-    height: 200px;
 }
 
 #screen-button.active {
-    background: #ea4335;
+    background: var(--danger-color);
 }
 
 /* Add styles for screen preview */
@@ -441,32 +378,17 @@ body {
 
 #input-audio-visualizer .audio-bar {
     height: 100%;
-    background-color: #34a853; /* Green for input audio */
+    background-color: var(--secondary-color); /* Green for input audio */
     width: 0%;
 }
 
 #audio-visualizer .audio-bar {
     height: 100%;
-    background-color: #4285f4; /* Blue for output audio */
+    background-color: var(--primary-color); /* Blue for output audio */
     width: 0%;
 }
 
-/* Update the animation for both visualizers */
-@keyframes audio-pulse {
-    0% {
-        transform: scaleY(1);
-    }
-    50% {
-        transform: scaleY(1.5);
-    }
-    100% {
-        transform: scaleY(1);
-    }
-}
-
-.audio-bar.active {
-    animation: audio-pulse 0.5s infinite;
-}
+/* Animation is defined above at line 145 */
 
 .settings {
     margin-bottom: 10px;
@@ -475,15 +397,15 @@ body {
 }
 
 #api-key {
-    padding: 8px;
-    border: 1px solid #ccc;
+    padding: var(--spacing-sm);
+    border: 1px solid var(--border-color);
     border-radius: 4px;
     width: 300px;
 }
 
-#voice-select  #response-type-select{
+#voice-select, #response-type-select {
     padding: 4px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
 }
  
@@ -606,8 +528,7 @@ body {
     font-weight: bold;
 }
 
-
 .fps-help {
-    color: #666;
+    color: var(--text-secondary);
     font-size: 12px;
 }
